@@ -1,0 +1,113 @@
+# =====================================================================================
+#  Multi-Tenant SaaS Billing & Subscription Engine - local stack
+#
+#    docker compose up --build
+#
+#  Brings up PostgreSQL, a single-node Kafka in KRaft mode (no ZooKeeper) and the
+#  application. The app waits for both dependencies to report healthy, so Flyway never
+#  races an unready database and the listener container never starts against a broker
+#  that is still forming its quorum.
+# =====================================================================================
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: billing
+      POSTGRES_USER: billing
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-billing}
+      # Slightly faster initdb and deterministic collation for the shared schema.
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U billing -d billing"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - billing-net
+
+  kafka:
+    image: apache/kafka:3.9.1
+    ports:
+      # 9092 is the in-network listener used by the app container.
+      # 29092 is advertised as localhost for tools running on the host.
+      - "29092:29092"
+    environment:
+      CLUSTER_ID: 5L6g3nShT-eMCtK--X86sw
+
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_HOST://:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+
+      # Single-node development cluster: every replication factor must be 1, otherwise
+      # internal topic creation blocks forever waiting for brokers that do not exist.
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: 6
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 20s
+    networks:
+      - billing-net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8080
+      DB_URL: jdbc:postgresql://postgres:5432/billing
+      DB_USERNAME: billing
+      DB_PASSWORD: ${DB_PASSWORD:-billing}
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KAFKA_CONSUMER_GROUP: subscription-manager-usage
+      # Development key only. Generate a fresh 32+ byte secret per environment:
+      #   openssl rand -base64 48
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env using .env.example}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
+      TZ: UTC
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health/readiness | grep -q UP"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    networks:
+      - billing-net
+
+volumes:
+  postgres-data:
+  kafka-data:
+
+networks:
+  billing-net:
+    driver: bridge
