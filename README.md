@@ -15,17 +15,20 @@ records, and MapStruct never exposes persistence entities through the API.
 | Package | Responsibility |
 | --- | --- |
 | `common` | API envelope, pagination and global exception advice |
-| `common.exception`, `common.enums`, `common.constant` | Domain failures and shared vocabulary |
+| `exception`, `common.enums`, `common.constant` | Domain failures and shared vocabulary |
 | `controller`, `dto`, `mapper` | HTTP contracts, validation and response mapping |
 | `service`, `service.impl`, `service.billing` | Use cases and money/period calculations |
 | `repository`, `entity` | PostgreSQL persistence and tenant ownership |
 | `security` | JWT validation, current-account checks and tenant context |
 | `messaging` | Kafka acknowledgement, consumption, retry and dead-letter handling |
 | `logging` | Request IDs, response status and duration |
-| `config`, `config.properties` | Wiring and validated environment configuration |
+| `config`, `property` | Wiring and validated environment configuration |
 
 See [architecture migration](docs/ARCHITECTURE_REBUILD.md) for the reference mapping
 and compatibility changes, and [system design](docs/SYSTEM_DESIGN.md) for billing flows.
+See [company integration](docs/COMPANY_INTEGRATION.md) for website integration examples,
+API documentation links, current capabilities, and the changes needed for companies to
+sell their own subscriptions.
 
 ## Run locally
 
@@ -103,6 +106,7 @@ without logging request bodies, passwords or bearer tokens.
 | `GET /tenants/me` | Current tenant profile |
 | `POST /subscriptions` | Tenant admin; create subscription (201) |
 | `GET /subscriptions`, `GET /subscriptions/{id}` | Current tenant's subscriptions |
+| `GET /subscriptions/current` | Current tenant's live subscription, independent of pagination |
 | `POST /subscriptions/{id}/change-plan` | Tenant admin; prorated plan/quantity change |
 | `POST /subscriptions/{id}/cancel` | Tenant admin; immediate or scheduled cancellation |
 | `POST /usage/events` | Authenticated; accepts usage after Kafka acknowledgement (202) |
@@ -153,9 +157,23 @@ validation/error contracts, OpenAPI, tenant isolation, Kafka delivery and duplic
 suppression, invoicing, settlement, proration and cancellation. Unit tests cover token
 handling, request-filter cleanup, billing periods and money arithmetic.
 
-## Scope boundaries
+## Merchant service
 
-Payment settlement records state; no payment gateway is integrated. There is no automatic
+Subscribed companies can now create their own products and immutable prices, issue scoped
+backend API keys, onboard customers, start customer subscriptions, check feature access,
+record metered usage, and retrieve customer invoices under `/api/v1/merchant`.
+The dashboard's **Get started** flow guides these steps. See
+[company integration](docs/COMPANY_INTEGRATION.md) for the route/scopes table and examples.
+
+Customer subscriptions have a 60-second lifecycle worker for trials, renewals, usage
+invoicing, and period-end cancellation. Base fees are invoiced upfront; overage is billed
+in arrears. Settlement is manual; API keys cannot mark invoices paid. Merchant records
+are isolated from both other tenants and the original platform-account billing tables.
+
+## Platform-account scope boundaries
+
+Payment settlement records state; no payment gateway is integrated. For the original
+platform-account subscriptions, there is no automatic
 renewal scheduler, and scheduled cancellation requires a future lifecycle worker to take
 effect at the boundary. Immediate cancellation does not issue a credit note. Storage and
 seats are additive metrics, and included allowances are flat per subscription. Refresh

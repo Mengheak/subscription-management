@@ -6,7 +6,8 @@ are not dependencies of this service.
 
 | Reference pattern | Subscription implementation |
 | --- | --- |
-| Thin controllers and service interfaces | All six controllers delegate to transactional service implementations |
+| Thin controllers and service interfaces | Controllers delegate to transactional service implementations, including the merchant API and key management |
+| `property` and `exception` packages | Validated configuration and domain exceptions use the reference project's top-level package boundaries |
 | Shared `ApiResponse` / `PageResponse` | `common` owns success, failure and pagination contracts |
 | Global exception advice | One HTTP error path for validation, business rules and security failures |
 | JWT filter and persisted account checks | Signed claims plus current user, role and tenant status |
@@ -22,6 +23,16 @@ All `/api/v1` routes and success HTTP statuses remain. Successful JSON payloads 
 and `data` containing `errorCode`, `path`, `timestamp`, optional `fieldErrors`/`errorId`.
 This is a breaking wire-format change and requires updating API clients together with deployment.
 The shell smoke test has been migrated. Generated OpenAPI describes controller envelopes.
+
+Pagination also includes `first`, matching the reference's `PageResponse`. Existing page
+fields remain available. `GET /api/v1/subscriptions/current` returns the authenticated
+tenant's live subscription independently of history pagination. With no live subscription,
+it returns HTTP 200 with a successful envelope and no `data` field (the configured Jackson
+null omission applies). It uses the same tenant-scoped repository access as the other reads.
+
+The sibling `sm-client` application consumes these contracts through a typed RTK Query
+service. Next.js proxies `/api/v1/*` to `API_BASE_URL`, which defaults to the local Java
+server. Its README describes setup, state boundaries, workflows and browser verification.
 
 JWTs issued before the migration remain usable if they are valid and their account/tenant
 is active. Current database roles replace token-carried roles for authorization. Invalid
