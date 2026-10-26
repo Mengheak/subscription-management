@@ -36,6 +36,7 @@ public class SecurityConfig {
     private final SecurityProperties securityProperties;
     private final CorsProperties corsProperties;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final com.chheang.mengheak.subscriptionmanager.security.MerchantApiKeyFilter merchantApiKeyFilter;
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
     private final RestAccessDeniedHandler accessDeniedHandler;
 
@@ -53,6 +54,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(merchantApiKeyFilter, JwtAuthenticationFilter.class)
                 .build();
     }
 
@@ -60,6 +62,13 @@ public class SecurityConfig {
     public FilterRegistrationBean<JwtAuthenticationFilter> jwtFilterServletRegistration(
             JwtAuthenticationFilter filter) {
         FilterRegistrationBean<JwtAuthenticationFilter> registration = new FilterRegistrationBean<>(filter);
+        registration.setEnabled(false);
+        return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean<com.chheang.mengheak.subscriptionmanager.security.MerchantApiKeyFilter> apiKeyFilterServletRegistration() {
+        var registration = new FilterRegistrationBean<>(merchantApiKeyFilter);
         registration.setEnabled(false);
         return registration;
     }

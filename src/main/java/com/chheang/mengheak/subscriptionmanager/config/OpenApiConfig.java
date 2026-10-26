@@ -35,7 +35,10 @@ public class OpenApiConfig {
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
-                                .description("Access token issued by POST /api/v1/auth/login")))
+                                .description("Access token issued by POST /api/v1/auth/login"))
+                        .addSecuritySchemes("apiKeyAuth", new SecurityScheme().type(SecurityScheme.Type.APIKEY)
+                                .in(SecurityScheme.In.HEADER).name("X-API-Key")
+                                .description("Merchant backend API key; use only on merchant routes. Do not combine with bearer authentication.")))
                 .addSecurityItem(new SecurityRequirement().addList(BEARER_SCHEME));
     }
 }
