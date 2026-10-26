@@ -38,6 +38,14 @@ public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
 
+    @GetMapping("/current")
+    @Operation(summary = "Get the tenant's live subscription",
+            description = "Returns the current active, trialing or past-due subscription independently of history pagination. "
+                    + "A successful response with no data means the tenant has no live subscription.")
+    public ResponseEntity<ApiResponse<SubscriptionResponse>> current() {
+        return ResponseEntity.ok(ApiResponse.ok(subscriptionService.current()));
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('TENANT_ADMIN')")
     @Operation(

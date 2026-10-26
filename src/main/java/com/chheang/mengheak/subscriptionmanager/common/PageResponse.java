@@ -24,6 +24,9 @@ public record PageResponse<T>(
         @Schema(description = "Total number of pages", example = "7")
         int totalPages,
 
+        @Schema(description = "Whether this is the first page", example = "true")
+        boolean first,
+
         @Schema(description = "Whether this is the last page", example = "false")
         boolean last
 ) {
@@ -35,6 +38,7 @@ public record PageResponse<T>(
                 page.getSize(),
                 page.getTotalElements(),
                 page.getTotalPages(),
+                page.isFirst(),
                 page.isLast()
         );
     }

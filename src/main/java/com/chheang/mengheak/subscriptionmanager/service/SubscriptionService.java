@@ -19,5 +19,7 @@ public interface SubscriptionService {
 
     SubscriptionResponse get(UUID subscriptionId);
 
+    SubscriptionResponse current();
+
     PageResponse<SubscriptionResponse> list(Pageable pageable);
 }

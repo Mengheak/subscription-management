@@ -186,6 +186,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     @Transactional(readOnly = true)
+    public SubscriptionResponse current() {
+        UUID tenantId = TenantContextHolder.requireTenantId();
+        return subscriptionRepository.findFirstByTenantIdAndStatusIn(tenantId, SubscriptionStatus.liveStatuses())
+                .map(subscriptionMapper::toResponse)
+                .orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public PageResponse<SubscriptionResponse> list(Pageable pageable) {
         UUID tenantId = TenantContextHolder.requireTenantId();
         return PageResponse.from(
