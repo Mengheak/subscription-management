@@ -1,7 +1,7 @@
 package com.chheang.mengheak.subscriptionmanager.security;
 
 import com.chheang.mengheak.subscriptionmanager.common.enums.UserRole;
-import com.chheang.mengheak.subscriptionmanager.config.properties.SecurityProperties;
+import com.chheang.mengheak.subscriptionmanager.property.SecurityProperties;
 import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

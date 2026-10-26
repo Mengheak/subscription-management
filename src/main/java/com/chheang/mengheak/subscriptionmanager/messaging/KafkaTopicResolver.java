@@ -1,6 +1,6 @@
 package com.chheang.mengheak.subscriptionmanager.messaging;
 
-import com.chheang.mengheak.subscriptionmanager.config.properties.KafkaTopicProperties;
+import com.chheang.mengheak.subscriptionmanager.property.KafkaTopicProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

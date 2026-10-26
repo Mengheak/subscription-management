@@ -1,7 +1,7 @@
 package com.chheang.mengheak.subscriptionmanager.service.billing;
 
 import com.chheang.mengheak.subscriptionmanager.common.enums.BillingCycle;
-import com.chheang.mengheak.subscriptionmanager.config.properties.BillingProperties;
+import com.chheang.mengheak.subscriptionmanager.property.BillingProperties;
 import com.chheang.mengheak.subscriptionmanager.entity.Plan;
 import com.chheang.mengheak.subscriptionmanager.entity.Subscription;
 import com.chheang.mengheak.subscriptionmanager.service.billing.ProrationCalculator.ProrationResult;

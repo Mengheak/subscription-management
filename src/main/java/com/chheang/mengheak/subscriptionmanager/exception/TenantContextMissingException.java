@@ -1,4 +1,4 @@
-package com.chheang.mengheak.subscriptionmanager.common.exception;
+package com.chheang.mengheak.subscriptionmanager.exception;
 
 import org.springframework.http.HttpStatus;
 

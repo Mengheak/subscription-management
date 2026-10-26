@@ -1,4 +1,4 @@
-package com.chheang.mengheak.subscriptionmanager.config.properties;
+package com.chheang.mengheak.subscriptionmanager.property;
 
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;

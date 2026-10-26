@@ -2,7 +2,7 @@ package com.chheang.mengheak.subscriptionmanager.service.billing;
 
 import com.chheang.mengheak.subscriptionmanager.common.enums.InvoiceLineType;
 import com.chheang.mengheak.subscriptionmanager.common.enums.InvoiceStatus;
-import com.chheang.mengheak.subscriptionmanager.config.properties.BillingProperties;
+import com.chheang.mengheak.subscriptionmanager.property.BillingProperties;
 import com.chheang.mengheak.subscriptionmanager.entity.Invoice;
 import com.chheang.mengheak.subscriptionmanager.entity.InvoiceLineItem;
 import com.chheang.mengheak.subscriptionmanager.entity.Plan;

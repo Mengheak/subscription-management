@@ -1,6 +1,6 @@
 package com.chheang.mengheak.subscriptionmanager.common;
 
-import com.chheang.mengheak.subscriptionmanager.common.exception.ApplicationException;
+import com.chheang.mengheak.subscriptionmanager.exception.ApplicationException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;

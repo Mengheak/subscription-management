@@ -2,9 +2,9 @@ package com.chheang.mengheak.subscriptionmanager.service.impl;
 
 import com.chheang.mengheak.subscriptionmanager.common.enums.SubscriptionStatus;
 import com.chheang.mengheak.subscriptionmanager.common.enums.UsageMetric;
-import com.chheang.mengheak.subscriptionmanager.common.exception.BusinessRuleException;
-import com.chheang.mengheak.subscriptionmanager.common.exception.ResourceNotFoundException;
-import com.chheang.mengheak.subscriptionmanager.config.properties.BillingProperties;
+import com.chheang.mengheak.subscriptionmanager.exception.BusinessRuleException;
+import com.chheang.mengheak.subscriptionmanager.exception.ResourceNotFoundException;
+import com.chheang.mengheak.subscriptionmanager.property.BillingProperties;
 import com.chheang.mengheak.subscriptionmanager.dto.usage.RecordUsageRequest;
 import com.chheang.mengheak.subscriptionmanager.dto.usage.UsageAcceptedResponse;
 import com.chheang.mengheak.subscriptionmanager.dto.usage.UsageMetricSummary;

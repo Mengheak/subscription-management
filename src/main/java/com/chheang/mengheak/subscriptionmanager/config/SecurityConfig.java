@@ -1,7 +1,7 @@
 package com.chheang.mengheak.subscriptionmanager.config;
 
-import com.chheang.mengheak.subscriptionmanager.config.properties.SecurityProperties;
-import com.chheang.mengheak.subscriptionmanager.config.properties.CorsProperties;
+import com.chheang.mengheak.subscriptionmanager.property.SecurityProperties;
+import com.chheang.mengheak.subscriptionmanager.property.CorsProperties;
 import com.chheang.mengheak.subscriptionmanager.security.JwtAuthenticationFilter;
 import com.chheang.mengheak.subscriptionmanager.security.RestAccessDeniedHandler;
 import com.chheang.mengheak.subscriptionmanager.security.RestAuthenticationEntryPoint;

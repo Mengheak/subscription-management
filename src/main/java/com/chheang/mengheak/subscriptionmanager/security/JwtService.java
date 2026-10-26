@@ -2,7 +2,7 @@ package com.chheang.mengheak.subscriptionmanager.security;
 
 import com.chheang.mengheak.subscriptionmanager.common.constant.SecurityConstants;
 import com.chheang.mengheak.subscriptionmanager.common.enums.UserRole;
-import com.chheang.mengheak.subscriptionmanager.config.properties.SecurityProperties;
+import com.chheang.mengheak.subscriptionmanager.property.SecurityProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;

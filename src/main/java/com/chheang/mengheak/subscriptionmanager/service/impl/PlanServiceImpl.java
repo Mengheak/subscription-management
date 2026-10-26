@@ -1,6 +1,6 @@
 package com.chheang.mengheak.subscriptionmanager.service.impl;
 
-import com.chheang.mengheak.subscriptionmanager.common.exception.ResourceNotFoundException;
+import com.chheang.mengheak.subscriptionmanager.exception.ResourceNotFoundException;
 import com.chheang.mengheak.subscriptionmanager.dto.plan.PlanResponse;
 import com.chheang.mengheak.subscriptionmanager.mapper.PlanMapper;
 import com.chheang.mengheak.subscriptionmanager.repository.PlanRepository;

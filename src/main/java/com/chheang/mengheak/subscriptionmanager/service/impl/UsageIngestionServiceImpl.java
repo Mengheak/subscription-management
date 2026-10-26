@@ -1,6 +1,6 @@
 package com.chheang.mengheak.subscriptionmanager.service.impl;
 
-import com.chheang.mengheak.subscriptionmanager.config.properties.BillingProperties;
+import com.chheang.mengheak.subscriptionmanager.property.BillingProperties;
 import com.chheang.mengheak.subscriptionmanager.entity.Subscription;
 import com.chheang.mengheak.subscriptionmanager.entity.UsageCounter;
 import com.chheang.mengheak.subscriptionmanager.entity.UsageEvent;

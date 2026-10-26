@@ -1,6 +1,6 @@
 package com.chheang.mengheak.subscriptionmanager.config;
 
-import com.chheang.mengheak.subscriptionmanager.config.properties.KafkaTopicProperties;
+import com.chheang.mengheak.subscriptionmanager.property.KafkaTopicProperties;
 import com.chheang.mengheak.subscriptionmanager.messaging.UsageEventConsumer;
 import com.chheang.mengheak.subscriptionmanager.messaging.event.UsageEventMessage;
 import lombok.RequiredArgsConstructor;

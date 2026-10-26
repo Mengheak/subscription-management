@@ -1,6 +1,6 @@
 package com.chheang.mengheak.subscriptionmanager.security;
 
-import com.chheang.mengheak.subscriptionmanager.common.exception.TenantContextMissingException;
+import com.chheang.mengheak.subscriptionmanager.exception.TenantContextMissingException;
 
 import java.util.Optional;
 import java.util.UUID;

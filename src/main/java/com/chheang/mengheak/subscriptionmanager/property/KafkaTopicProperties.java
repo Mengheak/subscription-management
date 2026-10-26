@@ -1,4 +1,4 @@
-package com.chheang.mengheak.subscriptionmanager.config.properties;
+package com.chheang.mengheak.subscriptionmanager.property;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
